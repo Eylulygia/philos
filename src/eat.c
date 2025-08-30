@@ -41,10 +41,18 @@ int actor_eat(actor_t *a)
     if (a->sim->n_actors == 1)
         return (single_actor_step(a));
     lock_forks(a, &first, &second);
-    log_event(a->sim, a->id, "is eating");
+    /* Guarded start: avoid printing eating if a death just toggled running */
     pthread_mutex_lock(&a->sim->guard);
+    if (atomic_load(&a->sim->running) == 0)
+    {
+        pthread_mutex_unlock(&a->sim->guard);
+        pthread_mutex_unlock(&a->sim->forks[first]);
+        pthread_mutex_unlock(&a->sim->forks[second]);
+        return (1);
+    }
     a->last_meal_ms = now_ms();
     pthread_mutex_unlock(&a->sim->guard);
+    log_event(a->sim, a->id, "is eating");
     sleep_for(a->sim->t_eat, a->sim);
     pthread_mutex_lock(&a->sim->guard);
     if ((a->sim->n_actors % 2) == 1)
