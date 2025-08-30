@@ -9,6 +9,8 @@ int sim_run(sim_t *s)
         i = 0;
         while (i < s->n_actors)
         {
+            /* initialize last_meal before thread starts to avoid races */
+            s->actors[i].last_meal_ms = now_ms();
             if (pthread_create(&s->actors[i].thread, NULL,
                     actor_routine, &s->actors[i]))
             {
@@ -18,7 +20,6 @@ int sim_run(sim_t *s)
                 sim_teardown(s);
                 return 1;
             }
-            s->actors[i].last_meal_ms = now_ms();
             s->threads_created++;
             i++;
         }
