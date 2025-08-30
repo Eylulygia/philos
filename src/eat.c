@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   eat.c                                              :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: yourlogin <you@student.42istanbul.com>     +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/30 22:00:00 by yourlogin         #+#    #+#             */
-/*   Updated: 2025/08/30 22:00:00 by yourlogin        ###   ########.tr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "philosophers.h"
 
 static int single_actor_step(actor_t *a)
@@ -65,4 +53,3 @@ int actor_eat(actor_t *a)
     pthread_mutex_unlock(&a->sim->forks[second]);
     return (0);
 }
-

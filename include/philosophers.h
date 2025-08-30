@@ -1,14 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   philosophers.h                                     :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: yourlogin <you@student.42istanbul.com>     +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/30 22:00:00 by yourlogin         #+#    #+#             */
-/*   Updated: 2025/08/30 22:00:00 by yourlogin        ###   ########.tr       */
-/*                                                                            */
-/* ************************************************************************** */
 /* Public interface for the refactored Philosophers project */
 #ifndef PHILOSOPHERS_H
 #define PHILOSOPHERS_H
