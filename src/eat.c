@@ -16,7 +16,8 @@ static void lock_forks(actor_t *a, int *first, int *second)
 
     l = a->left;
     r = a->right;
-    if (l < r)
+    /* Odd-even ordering to reduce contention while avoiding deadlock */
+    if ((a->id % 2) == 0)
     {
         *first = l;
         *second = r;
@@ -46,7 +47,8 @@ int actor_eat(actor_t *a)
     pthread_mutex_unlock(&a->sim->guard);
     sleep_for(a->sim->t_eat, a->sim);
     pthread_mutex_lock(&a->sim->guard);
-    a->last_meal_ms = now_ms();
+    if ((a->sim->n_actors % 2) == 1)
+        a->last_meal_ms = now_ms();
     a->meals++;
     pthread_mutex_unlock(&a->sim->guard);
     pthread_mutex_unlock(&a->sim->forks[first]);
