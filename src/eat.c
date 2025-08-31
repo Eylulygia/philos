@@ -16,8 +16,8 @@ static void lock_forks(actor_t *a, int *first, int *second)
 
     l = a->left;
     r = a->right;
-    /* Odd-even ordering to reduce contention while avoiding deadlock */
-    if ((a->id % 2) == 0)
+    /* Deterministic order: always lock lower index first to avoid deadlock */
+    if (l < r)
     {
         *first = l;
         *second = r;
@@ -53,8 +53,6 @@ static void finish_eating(actor_t *a, int first, int second)
 {
     sleep_for(a->sim->t_eat, a->sim);
     pthread_mutex_lock(&a->sim->guard);
-    if ((a->sim->n_actors % 2) == 1)
-        a->last_meal_ms = now_ms();
     a->meals++;
     pthread_mutex_unlock(&a->sim->guard);
     pthread_mutex_unlock(&a->sim->forks[first]);

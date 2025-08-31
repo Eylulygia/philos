@@ -25,6 +25,7 @@ typedef struct s_actor
     int         meals;
     long long   last_meal_ms;
     pthread_t   thread;
+    int         started;
     sim_t      *sim;
 } actor_t;
 

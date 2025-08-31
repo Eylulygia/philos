@@ -3,8 +3,9 @@
 void *actor_routine(void *arg)
 {
     actor_t *a;
-
     a = (actor_t *)arg;
+    if (!a || !a->sim)
+        return (NULL);
     if (a->id % 2 == 1)
         usleep(15000);
     while (atomic_load(&a->sim->running))

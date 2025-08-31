@@ -4,19 +4,26 @@ static int spawn_threads(sim_t *s)
     int i;
 
     s->threads_created = 0;
+    /* Set all last_meal timestamps before any thread starts */
     i = 0;
     while (i < s->n_actors)
     {
-        s->actors[i].last_meal_ms = now_ms();
+        s->actors[i].last_meal_ms = s->start_ms;
+        i++;
+    }
+    /* Create threads */
+    i = 0;
+    while (i < s->n_actors)
+    {
         if (pthread_create(&s->actors[i].thread, NULL,
                 actor_routine, &s->actors[i]))
         {
             atomic_store(&s->running, 0);
-            printf("%sThread create failed for philo %d%s\n",
-                RED, i + 1, RESET);
+            printf("Thread create failed for philo %d\n", i + 1);
             sim_teardown(s);
             return (1);
         }
+        s->actors[i].started = 1;
         s->threads_created++;
         i++;
     }

@@ -5,9 +5,10 @@ void sim_teardown(sim_t *s)
     int i;
 
     i = 0;
-    while (i < s->threads_created)
+    while (i < s->n_actors)
     {
-        pthread_join(s->actors[i].thread, NULL);
+        if (s->actors[i].started)
+            pthread_join(s->actors[i].thread, NULL);
         i++;
     }
     i = 0;

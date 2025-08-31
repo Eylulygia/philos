@@ -147,6 +147,7 @@ static void init_actors(sim_t *sim)
         sim->actors[i].left = (i + 1) % sim->n_actors;
         sim->actors[i].last_meal_ms = 0;
         sim->actors[i].meals = 0;
+        sim->actors[i].started = 0;
         sim->actors[i].sim = sim;
         i++;
     }
