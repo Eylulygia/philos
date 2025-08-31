@@ -69,44 +69,70 @@ static void cleanup(sim_t *sim, int forks_inited, int log_inited, int guard_init
     free(sim->forks);
 }
 
-static int init_mutexes(sim_t *sim)
+static int alloc_structs(sim_t *sim)
 {
-    int forks_inited = 0;
     sim->actors = malloc(sizeof(actor_t) * sim->n_actors);
     if (!sim->actors)
-        return 1;
+        return (1);
     sim->forks = malloc(sizeof(pthread_mutex_t) * sim->n_actors);
     if (!sim->forks)
     {
         free(sim->actors);
-        return 1;
+        return (1);
     }
-    {
-        int i;
+    return (0);
+}
 
-        i = 0;
-        while (i < sim->n_actors)
-        {
-            if (pthread_mutex_init(&sim->forks[i], NULL))
-            {
-                cleanup(sim, forks_inited, 0, 0);
-                return 1;
-            }
-            forks_inited++;
-            i++;
-        }
+static int init_all_forks(sim_t *sim, int *forks_inited)
+{
+    int i;
+
+    *forks_inited = 0;
+    i = 0;
+    while (i < sim->n_actors)
+    {
+        if (pthread_mutex_init(&sim->forks[i], NULL))
+            return (1);
+        (*forks_inited)++;
+        i++;
+    }
+    return (0);
+}
+
+static int init_mutexes(sim_t *sim)
+{
+    int forks_inited;
+
+    if (alloc_structs(sim))
+        return (1);
+    forks_inited = 0;
+    if (init_all_forks(sim, &forks_inited))
+    {
+        cleanup(sim, forks_inited, 0, 0);
+        return (1);
     }
     if (pthread_mutex_init(&sim->log_lock, NULL))
     {
         cleanup(sim, forks_inited, 0, 0);
-        return 1;
+        return (1);
     }
     if (pthread_mutex_init(&sim->guard, NULL))
     {
         cleanup(sim, forks_inited, 1, 0);
-        return 1;
+        return (1);
     }
-    return 0;
+    return (0);
+}
+
+static int report_parse_error(int rc)
+{
+    if (rc == 1)
+        return errorf("Only positive integers are allowed.\n");
+    if (rc == 2)
+        return errorf("Out of range: use [0..INT_MAX].\n");
+    if (rc == 3)
+        return errorf("Invalid character: only digits 0-9 allowed.\n");
+    return (0);
 }
 
 static void init_actors(sim_t *sim)
@@ -126,66 +152,49 @@ static void init_actors(sim_t *sim)
     }
 }
 
-int args_parse(sim_t *sim, int ac, char **av)
+static int parse_one(const char *s, long *out)
 {
-    {
-        long v;
-        int  rc;
+    int rc;
 
-        rc = parse_u32(av[1], &v);
-        if (rc == 1)
-            return errorf("Only positive integers are allowed.\n");
-        if (rc == 2)
-            return errorf("Out of range: use [0..INT_MAX].\n");
-        if (rc == 3)
-            return errorf("Invalid character: only digits 0-9 allowed.\n");
-        sim->n_actors = v;
-    }
-    {
-        long v; int rc = parse_u32(av[2], &v);
-        if (rc == 1)
-            return errorf("Only positive integers are allowed.\n");
-        if (rc == 2)
-            return errorf("Out of range: use [0..INT_MAX].\n");
-        if (rc == 3)
-            return errorf("Invalid character: only digits 0-9 allowed.\n");
-        sim->t_die = v;
-    }
-    {
-        long v; int rc = parse_u32(av[3], &v);
-        if (rc == 1)
-            return errorf("Only positive integers are allowed.\n");
-        if (rc == 2)
-            return errorf("Out of range: use [0..INT_MAX].\n");
-        if (rc == 3)
-            return errorf("Invalid character: only digits 0-9 allowed.\n");
-        sim->t_eat = v;
-    }
-    {
-        long v; int rc = parse_u32(av[4], &v);
-        if (rc == 1)
-            return errorf("Only positive integers are allowed.\n");
-        if (rc == 2)
-            return errorf("Out of range: use [0..INT_MAX].\n");
-        if (rc == 3)
-            return errorf("Invalid character: only digits 0-9 allowed.\n");
-        sim->t_sleep = v;
-    }
-    atomic_store(&sim->running, 1);
-    atomic_store(&sim->all_full, 1);
+    rc = parse_u32(s, out);
+    if (report_parse_error(rc))
+        return (1);
+    return (0);
+}
+
+static int parse_fields(sim_t *sim, int ac, char **av)
+{
+    long v;
+
+    if (parse_one(av[1], &v))
+        return (1);
+    sim->n_actors = v;
+    if (parse_one(av[2], &v))
+        return (1);
+    sim->t_die = v;
+    if (parse_one(av[3], &v))
+        return (1);
+    sim->t_eat = v;
+    if (parse_one(av[4], &v))
+        return (1);
+    sim->t_sleep = v;
     if (ac == 6)
     {
-        long v; int rc = parse_u32(av[5], &v);
-        if (rc == 1)
-            return errorf("Only positive integers are allowed.\n");
-        if (rc == 2)
-            return errorf("Out of range: use [0..INT_MAX].\n");
-        if (rc == 3)
-            return errorf("Invalid character: only digits 0-9 allowed.\n");
+        if (parse_one(av[5], &v))
+            return (1);
         sim->max_meals = v;
     }
     else
         sim->max_meals = -1;
+    return (0);
+}
+
+int args_parse(sim_t *sim, int ac, char **av)
+{
+    if (parse_fields(sim, ac, av))
+        return (1);
+    atomic_store(&sim->running, 1);
+    atomic_store(&sim->all_full, 1);
     validate(sim, ac);
     if (init_mutexes(sim))
         return errorf("An error occured during mutex initialization, try again.\n");
