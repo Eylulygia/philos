@@ -65,7 +65,7 @@ long long   ms_since(long long past);
 void        sleep_for(long long ms, sim_t *sim);
 
 /* log.c */
-void        panicf(const char *msg);
+int         errorf(const char *msg);
 void        log_event(sim_t *sim, int actor_id, const char *msg);
 
 #endif

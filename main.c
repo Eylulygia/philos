@@ -16,10 +16,10 @@ int	main(int ac, char **av)
         return (0);
     }
     if (ac != 5 && ac != 6)
-        panicf("Usage: ./philo number_of_philos time_to_die time_to_eat time_to_sleep [max_meals]\n");
+        return errorf("Usage: ./philo number_of_philos time_to_die time_to_eat time_to_sleep [max_meals]\n");
     if (args_parse(&sim, ac, av))
-        panicf("An error occurred while parsing input!\n");
+        return (1);
     if (sim_run(&sim))
-        panicf("An error occurred while starting the simulation!\n");
+        return errorf("An error occurred while starting the simulation!\n");
     return (0);
 }

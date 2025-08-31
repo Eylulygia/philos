@@ -1,9 +1,9 @@
 #include "philosophers.h"
 
-void panicf(const char *msg)
+int errorf(const char *msg)
 {
     printf("%s%s%s", RED, msg, RESET);
-    exit(EXIT_FAILURE);
+    return (1);
 }
 
 void log_event(sim_t *sim, int actor_id, const char *msg)
