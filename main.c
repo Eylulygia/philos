@@ -1,11 +1,11 @@
 #include "philosophers.h"
-#include <string.h>
+/* use local ft_strcmp instead of strcmp */
 
 int	main(int ac, char **av)
 {
     simulation_t	 sim;
 
-    if (ac == 2 && (!strcmp(av[1], "--help") || !strcmp(av[1], "-h")))
+    if (ac == 2 && (ft_strcmp(av[1], "--help") == 0 || ft_strcmp(av[1], "-h") == 0))
     {
         printf("Usage: ./philo number_of_philos time_to_die time_to_eat time_to_sleep [max_meals]\n");
         printf("  number_of_philos: >= 1\n");

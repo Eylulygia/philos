@@ -70,4 +70,7 @@ void        sleep_for(long long ms, simulation_t *sim);
 int         print_error(const char *msg);
 void        log_event(simulation_t *sim, int philo_id, const char *msg);
 
+/* utils */
+int         ft_strcmp(const char *s1, const char *s2);
+
 #endif

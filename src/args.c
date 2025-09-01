@@ -1,6 +1,7 @@
 ﻿#include "philosophers.h"
 
- 
+/* argument helpers restored inline */
+
 static int skip_space_and_sign(const char *s, const char **outp)
 {
     while ((*s >= 9 && *s <= 13) || *s == 32)
@@ -13,7 +14,6 @@ static int skip_space_and_sign(const char *s, const char **outp)
     return (0);
 }
 
- 
 static int parse_u32(const char *s, long *out)
 {
     const char *p;
@@ -56,7 +56,6 @@ static int parse_one(const char *s, long *out)
     return (0);
 }
 
- 
 static int parse_fields(simulation_t *sim, int ac, char **av)
 {
     long v;
