@@ -31,3 +31,33 @@ int parse_args(simulation_t *sim, int ac, char **av)
     init_philos(sim);
     return (0);
 }
+
+void init_philos(simulation_t *sim)
+{
+    int i = 0;
+    while (i < sim->num_philosophers)
+    {
+        sim->philosophers[i].id = i;
+        sim->philosophers[i].right_fork = i;
+        sim->philosophers[i].left_fork = (i + 1) % sim->num_philosophers;
+        sim->philosophers[i].last_meal_ms = 0;
+        sim->philosophers[i].meals = 0;
+        sim->philosophers[i].thread_started = 0;
+        sim->philosophers[i].sim = sim;
+        i++;
+    }
+}
+
+int alloc_structs(simulation_t *sim)
+{
+    sim->philosophers = malloc(sizeof(philosopher_t) * sim->num_philosophers);
+    if (!sim->philosophers)
+        return (1);
+    sim->forks = malloc(sizeof(pthread_mutex_t) * sim->num_philosophers);
+    if (!sim->forks)
+    {
+        free(sim->philosophers);
+        return (1);
+    }
+    return (0);
+}

@@ -76,6 +76,7 @@ int         ft_strcmp(const char *s1, const char *s2);
 /* init helpers (from init.c) */
 int         init_mutexes(simulation_t *sim);
 void        init_philos(simulation_t *sim);
+int         alloc_structs(simulation_t *sim);
 
 
 #endif
