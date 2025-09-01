@@ -193,8 +193,9 @@ int args_parse(sim_t *sim, int ac, char **av)
 {
     if (parse_fields(sim, ac, av))
         return (1);
-    atomic_store(&sim->running, 1);
-    atomic_store(&sim->all_full, 1);
+    /* No threads yet; direct writes are safe */
+    sim->running = 1;
+    sim->all_full = 1;
     validate(sim, ac);
     if (init_mutexes(sim))
         return errorf("An error occured during mutex initialization, try again.\n");

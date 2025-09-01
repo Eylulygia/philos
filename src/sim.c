@@ -11,7 +11,9 @@ static int spawn_threads(sim_t *s)
         if (pthread_create(&s->actors[i].thread, NULL,
                 actor_routine, &s->actors[i]))
         {
-            atomic_store(&s->running, 0);
+            pthread_mutex_lock(&s->guard);
+            s->running = 0;
+            pthread_mutex_unlock(&s->guard);
             printf("%sThread create failed for philo %d%s\n",
                 RED, i + 1, RESET);
             sim_teardown(s);

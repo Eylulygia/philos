@@ -15,8 +15,14 @@ long long ms_since(long long past)
 void sleep_for(long long ms, sim_t *sim)
 {
     long long start = now_ms();
-    while (atomic_load(&sim->running))
+    while (1)
     {
+        int running;
+        pthread_mutex_lock(&sim->guard);
+        running = sim->running;
+        pthread_mutex_unlock(&sim->guard);
+        if (!running)
+            break;
         if (ms_since(start) >= ms)
             break;
         usleep(50);

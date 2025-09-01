@@ -1,11 +1,20 @@
 #include "philosophers.h"
-#include <string.h>
+/* Avoid using strcmp; implement a tiny comparator */
+static int str_eq(const char *a, const char *b)
+{
+    while (*a && *b && *a == *b)
+    {
+        a++;
+        b++;
+    }
+    return (*a == '\0' && *b == '\0');
+}
 
 int	main(int ac, char **av)
 {
     sim_t	sim;
 
-    if (ac == 2 && (!strcmp(av[1], "--help") || !strcmp(av[1], "-h")))
+    if (ac == 2 && (str_eq(av[1], "--help") || str_eq(av[1], "-h")))
     {
         printf("Usage: ./philo number_of_philos time_to_die time_to_eat time_to_sleep [max_meals]\n");
         printf("  number_of_philos: >= 1\n");

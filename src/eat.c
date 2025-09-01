@@ -36,7 +36,7 @@ static void lock_forks(actor_t *a, int *first, int *second)
 static int begin_eating(actor_t *a, int first, int second)
 {
     pthread_mutex_lock(&a->sim->guard);
-    if (atomic_load(&a->sim->running) == 0)
+    if (a->sim->running == 0)
     {
         pthread_mutex_unlock(&a->sim->guard);
         pthread_mutex_unlock(&a->sim->forks[first]);

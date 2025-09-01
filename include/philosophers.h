@@ -8,7 +8,7 @@
 #include <limits.h>
 #include <sys/time.h>
 #include <unistd.h>
-#include <stdatomic.h>
+/* No atomics allowed per project rules */
 
 #define RED     "\033[0;31m"
 #define GREEN   "\033[0;32m"
@@ -36,8 +36,8 @@ struct s_sim
     int             t_sleep;
     int             max_meals; /* -1 unlimited */
 
-    atomic_int      running;   /* 1 while sim is active */
-    atomic_int      all_full;  /* 0 when everyone reached max_meals */
+    int             running;   /* 1 while sim is active */
+    int             all_full;  /* 0 when everyone reached max_meals */
     int             idx;       /* scratch index for monitors */
     int             threads_created;
 

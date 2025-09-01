@@ -7,10 +7,15 @@ void *actor_routine(void *arg)
     a = (actor_t *)arg;
     if (a->id % 2 == 1)
         usleep(15000);
-    while (atomic_load(&a->sim->running))
+    while (1)
     {
-        if (atomic_load(&a->sim->all_full) == 0
-            || atomic_load(&a->sim->running) == 0)
+        int running;
+        int all_full;
+        pthread_mutex_lock(&a->sim->guard);
+        running = a->sim->running;
+        all_full = a->sim->all_full;
+        pthread_mutex_unlock(&a->sim->guard);
+        if (!running || all_full == 0)
             break ;
         if (actor_eat(a))
             return (NULL);
