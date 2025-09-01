@@ -50,7 +50,7 @@ struct s_simulation
 };
 
 int         parse_args(simulation_t *sim, int ac, char **av);
-
+int         parse_fields(simulation_t *sim, int ac, char **av);
 int         run_simulation(simulation_t *sim);
 void       *philosopher_routine(void *arg);
 int         eat_once(philosopher_t *p);
@@ -72,5 +72,10 @@ void        log_event(simulation_t *sim, int philo_id, const char *msg);
 
 /* utils */
 int         ft_strcmp(const char *s1, const char *s2);
+
+/* init helpers (from init.c) */
+int         init_mutexes(simulation_t *sim);
+void        init_philos(simulation_t *sim);
+
 
 #endif

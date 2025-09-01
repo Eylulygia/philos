@@ -12,6 +12,8 @@ SRCS        :=      main.c \
                           src/time.c \
                           src/log.c \
                           src/state.c \
+                          src/init.c \
+                          src/parser.c \
                           
 OBJS        := $(SRCS:.c=.o)
 
