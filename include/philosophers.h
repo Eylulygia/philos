@@ -1,4 +1,3 @@
-/* Public interface for the refactored Philosophers project */
 #ifndef PHILOSOPHERS_H
 #define PHILOSOPHERS_H
 
@@ -8,65 +7,67 @@
 #include <limits.h>
 #include <sys/time.h>
 #include <unistd.h>
-#include <stdatomic.h>
 
 #define RED     "\033[0;31m"
 #define GREEN   "\033[0;32m"
 #define BLUE    "\033[0;34m"
 #define RESET   "\033[0m"
 
-typedef struct s_sim sim_t;
+typedef struct s_simulation simulation_t;
 
-typedef struct s_actor
+typedef struct s_philosopher
 {
-    int         id;
-    int         left;
-    int         right;
-    int         meals;
-    long long   last_meal_ms;
-    pthread_t   thread;
-    int         started;
-    sim_t      *sim;
-} actor_t;
+    int             id;
+    int             left_fork;
+    int             right_fork;
+    int             meals;
+    long long       last_meal_ms;
+    pthread_t       thread;
+    int             thread_started;
+    simulation_t   *sim;
+} philosopher_t;
 
-struct s_sim
+struct s_simulation
 {
-    int             n_actors;
-    int             t_die;
-    int             t_eat;
-    int             t_sleep;
-    int             max_meals; /* -1 unlimited */
+    int             num_philosophers;
+    int             time_to_die;
+    int             time_to_eat;
+    int             time_to_sleep;
+    int             max_meals;
 
-    atomic_int      running;   /* 1 while sim is active */
-    atomic_int      all_full;  /* 0 when everyone reached max_meals */
-    int             idx;       /* scratch index for monitors */
+    int             is_running;
+    int             someone_hungry;
+    int             temp_index;
     int             threads_created;
 
     long long       start_ms;
     pthread_mutex_t *forks;
     pthread_mutex_t log_lock;
-    pthread_mutex_t guard;     /* protects last_meal_ms writes */
+    pthread_mutex_t data_lock;
+    pthread_mutex_t state_lock;
 
-    actor_t        *actors;
+    philosopher_t  *philosophers;
 };
 
-/* args */
-int         args_parse(sim_t *sim, int ac, char **av);
+int         parse_args(simulation_t *sim, int ac, char **av);
 
-/* sim */
-int         sim_run(sim_t *sim);
-void       *actor_routine(void *arg);
-int         actor_eat(actor_t *a);
-void        sim_monitor(sim_t *s);
-void        sim_teardown(sim_t *s);
+int         run_simulation(simulation_t *sim);
+void       *philosopher_routine(void *arg);
+int         eat_once(philosopher_t *p);
+void        monitor_simulation(simulation_t *s);
+void        teardown_simulation(simulation_t *s);
 
-/* time.c */
+int         get_running(simulation_t *s);
+void        set_running(simulation_t *s, int v);
+int         get_someone_hungry(simulation_t *s);
+void        set_someone_hungry(simulation_t *s, int v);
+int         mark_dead(simulation_t *s);
+
 long long   now_ms(void);
 long long   ms_since(long long past);
-void        sleep_for(long long ms, sim_t *sim);
+void        sleep_for(long long ms, simulation_t *sim);
 
-/* log.c */
-int         errorf(const char *msg);
-void        log_event(sim_t *sim, int actor_id, const char *msg);
+int         print_error(const char *msg);
+void        log_event(simulation_t *sim, int philo_id, const char *msg);
 
 #endif

@@ -1,22 +1,21 @@
 #include "philosophers.h"
 
-static int single_actor_step(actor_t *a)
+static int single_philo_step(philosopher_t *p)
 {
-    pthread_mutex_lock(&a->sim->forks[a->left]);
-    log_event(a->sim, a->id, "has taken a fork");
-    sleep_for(a->sim->t_die, a->sim);
-    pthread_mutex_unlock(&a->sim->forks[a->left]);
+    pthread_mutex_lock(&p->sim->forks[p->left_fork]);
+    log_event(p->sim, p->id, "has taken a fork");
+    sleep_for(p->sim->time_to_die, p->sim);
+    pthread_mutex_unlock(&p->sim->forks[p->left_fork]);
     return (1);
 }
 
-static void lock_forks(actor_t *a, int *first, int *second)
+static void lock_forks(philosopher_t *p, int *first, int *second)
 {
     int l;
     int r;
 
-    l = a->left;
-    r = a->right;
-    /* Deterministic order: always lock lower index first to avoid deadlock */
+    l = p->left_fork;
+    r = p->right_fork;
     if (l < r)
     {
         *first = l;
@@ -27,48 +26,48 @@ static void lock_forks(actor_t *a, int *first, int *second)
         *first = r;
         *second = l;
     }
-    pthread_mutex_lock(&a->sim->forks[*first]);
-    log_event(a->sim, a->id, "has taken a fork");
-    pthread_mutex_lock(&a->sim->forks[*second]);
-    log_event(a->sim, a->id, "has taken a fork");
+    pthread_mutex_lock(&p->sim->forks[*first]);
+    log_event(p->sim, p->id, "has taken a fork");
+    pthread_mutex_lock(&p->sim->forks[*second]);
+    log_event(p->sim, p->id, "has taken a fork");
 }
 
-static int begin_eating(actor_t *a, int first, int second)
+static int begin_eating(philosopher_t *p, int first, int second)
 {
-    pthread_mutex_lock(&a->sim->guard);
-    if (atomic_load(&a->sim->running) == 0)
+    pthread_mutex_lock(&p->sim->data_lock);
+    if (get_running(p->sim) == 0)
     {
-        pthread_mutex_unlock(&a->sim->guard);
-        pthread_mutex_unlock(&a->sim->forks[first]);
-        pthread_mutex_unlock(&a->sim->forks[second]);
+        pthread_mutex_unlock(&p->sim->data_lock);
+        pthread_mutex_unlock(&p->sim->forks[first]);
+        pthread_mutex_unlock(&p->sim->forks[second]);
         return (1);
     }
-    a->last_meal_ms = now_ms();
-    pthread_mutex_unlock(&a->sim->guard);
-    log_event(a->sim, a->id, "is eating");
+    p->last_meal_ms = now_ms();
+    pthread_mutex_unlock(&p->sim->data_lock);
+    log_event(p->sim, p->id, "is eating");
     return (0);
 }
 
-static void finish_eating(actor_t *a, int first, int second)
+static void finish_eating(philosopher_t *p, int first, int second)
 {
-    sleep_for(a->sim->t_eat, a->sim);
-    pthread_mutex_lock(&a->sim->guard);
-    a->meals++;
-    pthread_mutex_unlock(&a->sim->guard);
-    pthread_mutex_unlock(&a->sim->forks[first]);
-    pthread_mutex_unlock(&a->sim->forks[second]);
+    sleep_for(p->sim->time_to_eat, p->sim);
+    pthread_mutex_lock(&p->sim->data_lock);
+    p->meals++;
+    pthread_mutex_unlock(&p->sim->data_lock);
+    pthread_mutex_unlock(&p->sim->forks[first]);
+    pthread_mutex_unlock(&p->sim->forks[second]);
 }
 
-int actor_eat(actor_t *a)
+int eat_once(philosopher_t *p)
 {
     int first;
     int second;
 
-    if (a->sim->n_actors == 1)
-        return (single_actor_step(a));
-    lock_forks(a, &first, &second);
-    if (begin_eating(a, first, second))
+    if (p->sim->num_philosophers == 1)
+        return (single_philo_step(p));
+    lock_forks(p, &first, &second);
+    if (begin_eating(p, first, second))
         return (1);
-    finish_eating(a, first, second);
+    finish_eating(p, first, second);
     return (0);
 }

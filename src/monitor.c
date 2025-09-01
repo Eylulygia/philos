@@ -1,45 +1,48 @@
 #include "philosophers.h"
 
-static void check_death(sim_t *s)
+static void check_death(simulation_t *s)
 {
-    s->idx = -1;
-    while (++s->idx < s->n_actors && atomic_load(&s->running))
+    s->temp_index = -1;
+    while (++s->temp_index < s->num_philosophers && get_running(s))
     {
-        pthread_mutex_lock(&s->guard);
-        if (ms_since(s->actors[s->idx].last_meal_ms) > s->t_die)
+        int died = 0;
+        pthread_mutex_lock(&s->data_lock);
+        if (ms_since(s->philosophers[s->temp_index].last_meal_ms) > s->time_to_die)
+            died = 1;
+        pthread_mutex_unlock(&s->data_lock);
+        if (died && mark_dead(s))
         {
-            log_event(s, s->idx, "died");
-            atomic_store(&s->running, 0);
+            log_event(s, s->temp_index, "died");
+            break;
         }
-        pthread_mutex_unlock(&s->guard);
         usleep(100);
     }
 }
 
-static void check_full(sim_t *s)
+static void check_full(simulation_t *s)
 {
-    s->idx = 0;
-    while (s->idx < s->n_actors && s->max_meals != -1)
+    s->temp_index = 0;
+    while (s->temp_index < s->num_philosophers && s->max_meals != -1)
     {
         int meals;
 
-        pthread_mutex_lock(&s->guard);
-        meals = s->actors[s->idx].meals;
-        pthread_mutex_unlock(&s->guard);
+        pthread_mutex_lock(&s->data_lock);
+        meals = s->philosophers[s->temp_index].meals;
+        pthread_mutex_unlock(&s->data_lock);
         if (meals < s->max_meals)
             break ;
-        s->idx++;
+        s->temp_index++;
     }
-    if (s->idx == s->n_actors)
-        atomic_store(&s->all_full, 0);
+    if (s->temp_index == s->num_philosophers)
+        set_someone_hungry(s, 0);
 }
 
-void sim_monitor(sim_t *s)
+void monitor_simulation(simulation_t *s)
 {
-    while (atomic_load(&s->all_full))
+    while (get_someone_hungry(s))
     {
         check_death(s);
-        if (atomic_load(&s->running) == 0)
+        if (get_running(s) == 0)
             break ;
         check_full(s);
     }

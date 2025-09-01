@@ -1,41 +1,39 @@
 #include "philosophers.h"
-static int spawn_threads(sim_t *s)
+static int spawn_threads(simulation_t *s)
 {
     int i;
 
     s->threads_created = 0;
-    /* Set all last_meal timestamps before any thread starts */
     i = 0;
-    while (i < s->n_actors)
+    while (i < s->num_philosophers)
     {
-        s->actors[i].last_meal_ms = s->start_ms;
+        s->philosophers[i].last_meal_ms = s->start_ms;
         i++;
     }
-    /* Create threads */
     i = 0;
-    while (i < s->n_actors)
+    while (i < s->num_philosophers)
     {
-        if (pthread_create(&s->actors[i].thread, NULL,
-                actor_routine, &s->actors[i]))
+        if (pthread_create(&s->philosophers[i].thread, NULL,
+                philosopher_routine, &s->philosophers[i]))
         {
-            atomic_store(&s->running, 0);
+            set_running(s, 0);
             printf("Thread create failed for philo %d\n", i + 1);
-            sim_teardown(s);
+            teardown_simulation(s);
             return (1);
         }
-        s->actors[i].started = 1;
+        s->philosophers[i].thread_started = 1;
         s->threads_created++;
         i++;
     }
     return (0);
 }
 
-int sim_run(sim_t *s)
+int run_simulation(simulation_t *s)
 {
     s->start_ms = now_ms();
     if (spawn_threads(s))
         return (1);
-    sim_monitor(s);
-    sim_teardown(s);
+    monitor_simulation(s);
+    teardown_simulation(s);
     return (0);
 }

@@ -12,10 +12,10 @@ long long ms_since(long long past)
     return now_ms() - past;
 }
 
-void sleep_for(long long ms, sim_t *sim)
+void sleep_for(long long ms, simulation_t *sim)
 {
     long long start = now_ms();
-    while (atomic_load(&sim->running))
+    while (get_running(sim))
     {
         if (ms_since(start) >= ms)
             break;

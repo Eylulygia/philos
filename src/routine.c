@@ -1,23 +1,23 @@
 #include "philosophers.h"
 
-void *actor_routine(void *arg)
+void *philosopher_routine(void *arg)
 {
-    actor_t *a;
-    a = (actor_t *)arg;
-    if (!a || !a->sim)
+    philosopher_t *p;
+    p = (philosopher_t *)arg;
+    if (!p || !p->sim)
         return (NULL);
-    if (a->id % 2 == 1)
+    if (p->id % 2 == 1)
         usleep(15000);
-    while (atomic_load(&a->sim->running))
+    while (get_running(p->sim))
     {
-        if (atomic_load(&a->sim->all_full) == 0
-            || atomic_load(&a->sim->running) == 0)
+        if (get_someone_hungry(p->sim) == 0
+            || get_running(p->sim) == 0)
             break ;
-        if (actor_eat(a))
+        if (eat_once(p))
             return (NULL);
-        log_event(a->sim, a->id, "is sleeping");
-        sleep_for(a->sim->t_sleep, a->sim);
-        log_event(a->sim, a->id, "is thinking");
+        log_event(p->sim, p->id, "is sleeping");
+        sleep_for(p->sim->time_to_sleep, p->sim);
+        log_event(p->sim, p->id, "is thinking");
     }
     return (NULL);
 }
