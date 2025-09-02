@@ -1,35 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   routine.c                                          :+:      :+:    :+:   */
+/*   ftime.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ekamar <ekamar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/02 15:39:13 by ekamar            #+#    #+#             */
-/*   Updated: 2025/09/02 15:39:16 by ekamar           ###   ########.fr       */
+/*   Created: 2025/09/02 15:33:54 by ekamar            #+#    #+#             */
+/*   Updated: 2025/09/02 15:34:52 by ekamar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-void	*philosopher_routine(void *arg)
+long long	now_ms(void)
 {
-	philosopher_t	*p;
+	struct timeval	tv;
 
-	p = (philosopher_t *)arg;
-	if (!p || !p->sim)
-		return (NULL);
-	if (p->id % 2 == 1)
-		usleep(15000);
-	while (get_running(p->sim))
+	gettimeofday(&tv, NULL);
+	return (tv.tv_sec * 1000LL) + (tv.tv_usec / 1000);
+}
+
+long long	ms_since(long long past)
+{
+	return (now_ms() - past);
+}
+
+void	sleep_for(long long ms, simulation_t *sim)
+{
+	long long	start;
+
+	start = now_ms();
+	while (get_running(sim))
 	{
-		if (get_someone_hungry(p->sim) == 0 || get_running(p->sim) == 0)
+		if (ms_since(start) >= ms)
 			break ;
-		if (eat_once(p))
-			return (NULL);
-		log_event(p->sim, p->id, "is sleeping");
-		sleep_for(p->sim->time_to_sleep, p->sim);
-		log_event(p->sim, p->id, "is thinking");
+		usleep(50);
 	}
-	return (NULL);
 }

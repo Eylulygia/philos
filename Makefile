@@ -9,7 +9,7 @@ SRCS        :=      main.c \
                           src/teardown.c \
                           src/routine.c \
                           src/eat.c \
-                          src/time.c \
+                          src/ftime.c \
                           src/log.c \
                           src/state.c \
                           src/init.c \
