@@ -1,4 +1,4 @@
-﻿/* ************************************************************************** */
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   args.c                                             :+:      :+:    :+:   */
@@ -12,7 +12,7 @@
 
 #include "philosophers.h"
 
-static int	validate(simulation_t *sim, int ac)
+static int	validate(t_simulation *sim, int ac)
 {
 	if (sim->num_philosophers < 1)
 		return (print_error("Invalid number_of_philos (must be >= 1).\n"));
@@ -27,7 +27,7 @@ static int	validate(simulation_t *sim, int ac)
 	return (0);
 }
 
-int	parse_args(simulation_t *sim, int ac, char **av)
+int	parse_args(t_simulation *sim, int ac, char **av)
 {
 	if (parse_fields(sim, ac, av))
 		return (1);
@@ -40,7 +40,7 @@ int	parse_args(simulation_t *sim, int ac, char **av)
 	return (0);
 }
 
-void	init_philos(simulation_t *sim)
+void	init_philos(t_simulation *sim)
 {
 	int	i;
 
@@ -58,9 +58,9 @@ void	init_philos(simulation_t *sim)
 	}
 }
 
-int	alloc_structs(simulation_t *sim)
+int	alloc_structs(t_simulation *sim)
 {
-	sim->philosophers = malloc(sizeof(philosopher_t) * sim->num_philosophers);
+	sim->philosophers = malloc(sizeof(t_philosopher) * sim->num_philosophers);
 	if (!sim->philosophers)
 		return (1);
 	sim->forks = malloc(sizeof(pthread_mutex_t) * sim->num_philosophers);

@@ -25,7 +25,7 @@ long long	ms_since(long long past)
 	return (now_ms() - past);
 }
 
-void	sleep_for(long long ms, simulation_t *sim)
+void	sleep_for(long long ms, t_simulation *sim)
 {
 	long long	start;
 

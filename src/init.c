@@ -12,7 +12,7 @@
 
 #include "philosophers.h"
 
-static void	destroy_forks(simulation_t *sim, int count)
+static void	destroy_forks(t_simulation *sim, int count)
 {
 	int	i;
 
@@ -24,21 +24,21 @@ static void	destroy_forks(simulation_t *sim, int count)
 	}
 }
 
-static void	cleanup(simulation_t *sim, int forks_inited, int log_inited,
-		int data_inited, int state_inited)
+/* flags bitmask: 1=log, 2=data, 4=state */
+static void	cleanup(t_simulation *sim, int forks_inited, int flags)
 {
-	if (data_inited)
+	if (flags & 2)
 		pthread_mutex_destroy(&sim->data_lock);
-	if (state_inited)
+	if (flags & 4)
 		pthread_mutex_destroy(&sim->state_lock);
-	if (log_inited)
+	if (flags & 1)
 		pthread_mutex_destroy(&sim->log_lock);
 	destroy_forks(sim, forks_inited);
 	free(sim->philosophers);
 	free(sim->forks);
 }
 
-int	init_all_forks(simulation_t *sim, int *forks_inited)
+int	init_all_forks(t_simulation *sim, int *forks_inited)
 {
 	int	i;
 
@@ -54,27 +54,27 @@ int	init_all_forks(simulation_t *sim, int *forks_inited)
 	return (0);
 }
 
-static int	init_post_forks(simulation_t *sim, int forks_inited)
+static int	init_post_forks(t_simulation *sim, int forks_inited)
 {
 	if (pthread_mutex_init(&sim->log_lock, NULL))
 	{
-		cleanup(sim, forks_inited, 0, 0, 0);
+		cleanup(sim, forks_inited, 0);
 		return (1);
 	}
 	if (pthread_mutex_init(&sim->data_lock, NULL))
 	{
-		cleanup(sim, forks_inited, 1, 0, 0);
+		cleanup(sim, forks_inited, 1);
 		return (1);
 	}
 	if (pthread_mutex_init(&sim->state_lock, NULL))
 	{
-		cleanup(sim, forks_inited, 1, 1, 0);
+		cleanup(sim, forks_inited, 1 | 2);
 		return (1);
 	}
 	return (0);
 }
 
-int	init_mutexes(simulation_t *sim)
+int	init_mutexes(t_simulation *sim)
 {
 	int	forks_inited;
 
@@ -83,7 +83,7 @@ int	init_mutexes(simulation_t *sim)
 	forks_inited = 0;
 	if (init_all_forks(sim, &forks_inited))
 	{
-		cleanup(sim, forks_inited, 0, 0, 0);
+		cleanup(sim, forks_inited, 0);
 		return (1);
 	}
 	return (init_post_forks(sim, forks_inited));

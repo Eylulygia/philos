@@ -12,7 +12,7 @@
 
 #include "philosophers.h"
 
-int	get_running(simulation_t *s)
+int	get_running(t_simulation *s)
 {
 	int	v;
 
@@ -22,14 +22,14 @@ int	get_running(simulation_t *s)
 	return (v);
 }
 
-void	set_running(simulation_t *s, int v)
+void	set_running(t_simulation *s, int v)
 {
 	pthread_mutex_lock(&s->state_lock);
 	s->is_running = v;
 	pthread_mutex_unlock(&s->state_lock);
 }
 
-int	get_someone_hungry(simulation_t *s)
+int	get_someone_hungry(t_simulation *s)
 {
 	int	v;
 
@@ -39,14 +39,14 @@ int	get_someone_hungry(simulation_t *s)
 	return (v);
 }
 
-void	set_someone_hungry(simulation_t *s, int v)
+void	set_someone_hungry(t_simulation *s, int v)
 {
 	pthread_mutex_lock(&s->state_lock);
 	s->someone_hungry = v;
 	pthread_mutex_unlock(&s->state_lock);
 }
 
-int	mark_dead(simulation_t *s)
+int	mark_dead(t_simulation *s)
 {
 	int	changed;
 

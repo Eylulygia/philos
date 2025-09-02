@@ -12,7 +12,7 @@
 
 #include "philosophers.h"
 
-static int	single_philo_step(philosopher_t *p)
+static int	single_philo_step(t_philosopher *p)
 {
 	pthread_mutex_lock(&p->sim->forks[p->left_fork]);
 	log_event(p->sim, p->id, "has taken a fork");
@@ -21,7 +21,7 @@ static int	single_philo_step(philosopher_t *p)
 	return (1);
 }
 
-static void	lock_forks(philosopher_t *p, int *first, int *second)
+static void	lock_forks(t_philosopher *p, int *first, int *second)
 {
 	int	l;
 	int	r;
@@ -44,7 +44,7 @@ static void	lock_forks(philosopher_t *p, int *first, int *second)
 	log_event(p->sim, p->id, "has taken a fork");
 }
 
-static int	begin_eating(philosopher_t *p, int first, int second)
+static int	begin_eating(t_philosopher *p, int first, int second)
 {
 	pthread_mutex_lock(&p->sim->data_lock);
 	if (get_running(p->sim) == 0)
@@ -60,7 +60,7 @@ static int	begin_eating(philosopher_t *p, int first, int second)
 	return (0);
 }
 
-static void	finish_eating(philosopher_t *p, int first, int second)
+static void	finish_eating(t_philosopher *p, int first, int second)
 {
 	sleep_for(p->sim->time_to_eat, p->sim);
 	pthread_mutex_lock(&p->sim->data_lock);
@@ -70,7 +70,7 @@ static void	finish_eating(philosopher_t *p, int first, int second)
 	pthread_mutex_unlock(&p->sim->forks[second]);
 }
 
-int	eat_once(philosopher_t *p)
+int	eat_once(t_philosopher *p)
 {
 	int	first;
 	int	second;

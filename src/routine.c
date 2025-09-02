@@ -14,9 +14,9 @@
 
 void	*philosopher_routine(void *arg)
 {
-	philosopher_t	*p;
+	t_philosopher	*p;
 
-	p = (philosopher_t *)arg;
+	p = (t_philosopher *)arg;
 	if (!p || !p->sim)
 		return (NULL);
 	if (p->id % 2 == 1)

@@ -12,7 +12,7 @@
 
 #include "philosophers.h"
 
-static void	check_death(simulation_t *s)
+static void	check_death(t_simulation *s)
 {
 	int	died;
 
@@ -33,7 +33,7 @@ static void	check_death(simulation_t *s)
 	}
 }
 
-static void	check_full(simulation_t *s)
+static void	check_full(t_simulation *s)
 {
 		int meals;
 
@@ -51,7 +51,7 @@ static void	check_full(simulation_t *s)
 		set_someone_hungry(s, 0);
 }
 
-void	monitor_simulation(simulation_t *s)
+void	monitor_simulation(t_simulation *s)
 {
 	while (get_someone_hungry(s))
 	{

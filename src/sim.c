@@ -12,7 +12,7 @@
 
 #include "philosophers.h"
 
-static int	spawn_threads(simulation_t *s)
+static int	spawn_threads(t_simulation *s)
 {
 	int	i;
 
@@ -41,7 +41,7 @@ static int	spawn_threads(simulation_t *s)
 	return (0);
 }
 
-int	run_simulation(simulation_t *s)
+int	run_simulation(t_simulation *s)
 {
 	s->start_ms = now_ms();
 	if (spawn_threads(s))

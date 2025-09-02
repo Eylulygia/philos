@@ -28,7 +28,7 @@ int	print_error(const char *msg)
 	return (1);
 }
 
-void	log_event(simulation_t *sim, int philo_id, const char *msg)
+void	log_event(t_simulation *sim, int philo_id, const char *msg)
 {
 	long long	t;
 

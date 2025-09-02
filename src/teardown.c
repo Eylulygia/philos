@@ -12,7 +12,7 @@
 
 #include "philosophers.h"
 
-void	teardown_simulation(simulation_t *s)
+void	teardown_simulation(t_simulation *s)
 {
 	int	i;
 

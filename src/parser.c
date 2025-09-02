@@ -68,7 +68,7 @@ static int	parse_one(const char *s, long *out)
 	return (0);
 }
 
-int	parse_fields(simulation_t *sim, int ac, char **av)
+int	parse_fields(t_simulation *sim, int ac, char **av)
 {
 	long	v;
 

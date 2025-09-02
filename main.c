@@ -14,7 +14,7 @@
 
 int	main(int ac, char **av)
 {
-	simulation_t	sim;
+	t_simulation	sim;
 
 	if (ac == 2 && (ft_strcmp(av[1], "--help") == 0 || ft_strcmp(av[1],
 				"-h") == 0))
