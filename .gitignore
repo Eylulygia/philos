@@ -1,8 +1,0 @@
-cat > .gitignore << 'EOF'
-# Build artifacts
-*.o
-philo
-
-# IDE/editor
-.vscode/
-EOF

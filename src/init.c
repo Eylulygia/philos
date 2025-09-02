@@ -6,7 +6,7 @@
 /*   By: ekamar <ekamar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 15:38:30 by ekamar            #+#    #+#             */
-/*   Updated: 2025/09/02 15:42:47 by ekamar           ###   ########.fr       */
+/*   Updated: 2025/09/02 16:37:03 by ekamar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ static void	destroy_forks(t_simulation *sim, int count)
 	}
 }
 
-/* flags bitmask: 1=log, 2=data, 4=state */
 static void	cleanup(t_simulation *sim, int forks_inited, int flags)
 {
 	if (flags & 2)
