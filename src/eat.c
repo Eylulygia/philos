@@ -6,7 +6,7 @@
 /*   By: ekamar <ekamar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 15:38:07 by ekamar            #+#    #+#             */
-/*   Updated: 2025/09/02 19:49:44 by ekamar           ###   ########.fr       */
+/*   Updated: 2025/09/02 22:46:54 by ekamar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,6 @@ static void	finish_eating(t_philosopher *p, int first, int second)
 {
 	sleep_for(p->sim->time_to_eat, p->sim);
 	pthread_mutex_lock(&p->sim->data_lock);
-	p->last_meal_ms = now_ms();
 	p->meals++;
 	pthread_mutex_unlock(&p->sim->data_lock);
 	pthread_mutex_unlock(&p->sim->forks[first]);
