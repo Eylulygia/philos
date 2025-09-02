@@ -6,7 +6,7 @@
 /*   By: ekamar <ekamar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 15:40:29 by ekamar            #+#    #+#             */
-/*   Updated: 2025/09/02 15:41:07 by ekamar           ###   ########.fr       */
+/*   Updated: 2025/09/02 16:01:55 by ekamar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ typedef struct s_philosopher
 	long long				last_meal_ms;
 	pthread_t				thread;
 	int						thread_started;
-    t_simulation			*sim;
+	t_simulation			*sim;
 }							t_philosopher;
 
 struct						s_simulation
@@ -58,7 +58,7 @@ struct						s_simulation
 	pthread_mutex_t			data_lock;
 	pthread_mutex_t			state_lock;
 
-    t_philosopher			*philosophers;
+	t_philosopher			*philosophers;
 };
 
 int							parse_args(t_simulation *sim, int ac, char **av);

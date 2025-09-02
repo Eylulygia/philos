@@ -6,7 +6,7 @@
 /*   By: ekamar <ekamar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 15:33:54 by ekamar            #+#    #+#             */
-/*   Updated: 2025/09/02 15:34:52 by ekamar           ###   ########.fr       */
+/*   Updated: 2025/09/02 16:02:15 by ekamar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ long long	now_ms(void)
 	struct timeval	tv;
 
 	gettimeofday(&tv, NULL);
-	return (tv.tv_sec * 1000LL) + (tv.tv_usec / 1000);
+	return ((tv.tv_sec * 1000LL) + (tv.tv_usec / 1000));
 }
 
 long long	ms_since(long long past)

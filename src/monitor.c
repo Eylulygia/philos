@@ -6,7 +6,7 @@
 /*   By: ekamar <ekamar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 15:38:51 by ekamar            #+#    #+#             */
-/*   Updated: 2025/09/02 15:38:54 by ekamar           ###   ########.fr       */
+/*   Updated: 2025/09/02 16:08:19 by ekamar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,9 @@ static void	check_death(t_simulation *s)
 	{
 		died = 0;
 		pthread_mutex_lock(&s->data_lock);
-		if (ms_since(s->philosophers[s->temp_index].last_meal_ms) > s->time_to_die)
+		if (ms_since(
+				s->philosophers[s->temp_index].last_meal_ms)
+			> s->time_to_die)
 			died = 1;
 		pthread_mutex_unlock(&s->data_lock);
 		if (died && mark_dead(s))
@@ -35,7 +37,7 @@ static void	check_death(t_simulation *s)
 
 static void	check_full(t_simulation *s)
 {
-		int meals;
+	int	meals;
 
 	s->temp_index = 0;
 	while (s->temp_index < s->num_philosophers && s->max_meals != -1)
