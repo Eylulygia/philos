@@ -6,7 +6,7 @@
 /*   By: ekamar <ekamar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 15:39:13 by ekamar            #+#    #+#             */
-/*   Updated: 2025/09/02 22:46:43 by ekamar           ###   ########.fr       */
+/*   Updated: 2025/09/02 22:52:05 by ekamar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,11 @@ void	*philosopher_routine(void *arg)
 	if (!p || !p->sim)
 		return (NULL);
 	if (p->id % 2 == 1)
-		usleep(100);
+		usleep(1500);
 	while (get_running(p->sim))
 	{
+		if (p->id % 2 == 1)
+			usleep(1500);
 		if (get_someone_hungry(p->sim) == 0 || get_running(p->sim) == 0)
 			break ;
 		if (eat_once(p))
