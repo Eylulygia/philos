@@ -60,4 +60,5 @@ void	log_event(t_simulation *sim, int philo_id, const char *msg)
 		printf("%s%lld%s %s%d%s %s\n", RED, t, RESET, GREEN, philo_id + 1,
 			RESET, msg);
 	pthread_mutex_unlock(&sim->log_lock);
+	//usleep(50);
 }

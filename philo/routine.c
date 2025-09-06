@@ -26,8 +26,8 @@ static void	smart_think(t_philosopher *p)
 	if (margin > 0)
 	{
 		think_ms = margin / 2;
-		if (think_ms > 50)
-			think_ms = 50;
+		if (think_ms > 3)
+			think_ms = 1;
 		if (think_ms < 1)
 			think_ms = 1;
 		sleep_for(think_ms, sim);
@@ -35,6 +35,7 @@ static void	smart_think(t_philosopher *p)
 	else
 		sleep_for(1, sim);
 }
+
 
 void	*philosopher_routine(void *arg)
 {
