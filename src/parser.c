@@ -26,21 +26,24 @@ static int	skip_space_and_sign(const char *s, const char **outp)
 
 static int	parse_u32(const char *s, long *out)
 {
-	const char	*p;
-	long		val;
-	int			len;
+    const char	*p;
+    long		val;
+    int			len;
 
-	if (skip_space_and_sign(s, &p))
-		return (1);
-	val = 0;
-	len = 0;
-	while (p[len] >= '0' && p[len] <= '9')
-	{
-		val = val * 10 + (p[len] - '0');
-		if (val > INT_MAX)
-			return (2);
-		len++;
-	}
+    if (skip_space_and_sign(s, &p))
+        return (1);
+    val = 0;
+    len = 0;
+    /* Reject empty or whitespace-only strings (no digits) */
+    if (!(p[0] >= '0' && p[0] <= '9'))
+        return (3);
+    while (p[len] >= '0' && p[len] <= '9')
+    {
+        val = val * 10 + (p[len] - '0');
+        if (val > INT_MAX)
+            return (2);
+        len++;
+    }
 	if (!(p[len] == '\0' || (p[len] >= 9 && p[len] <= 13) || p[len] == 32))
 		return (3);
 	*out = val;

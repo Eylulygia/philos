@@ -29,15 +29,16 @@ static int	validate(t_simulation *sim, int ac)
 
 int	parse_args(t_simulation *sim, int ac, char **av)
 {
-	if (parse_fields(sim, ac, av))
-		return (1);
-	sim->is_running = 1;
-	sim->someone_hungry = 1;
-	validate(sim, ac);
-	if (init_mutexes(sim))
-		return (print_error("error occured during mutex initialization\n"));
-	init_philos(sim);
-	return (0);
+    if (parse_fields(sim, ac, av))
+        return (1);
+    sim->is_running = 1;
+    sim->someone_hungry = 1;
+    if (validate(sim, ac))
+        return (1);
+    if (init_mutexes(sim))
+        return (print_error("error occured during mutex initialization\n"));
+    init_philos(sim);
+    return (0);
 }
 
 void	init_philos(t_simulation *sim)
