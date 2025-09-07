@@ -6,7 +6,7 @@
 /*   By: ekamar <ekamar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/06 18:30:00 by ekamar            #+#    #+#             */
-/*   Updated: 2025/09/06 18:30:00 by ekamar           ###   ########.fr       */
+/*   Updated: 2025/09/07 17:06:11 by ekamar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,4 +63,3 @@ int	main(int ac, char **av)
 		return (print_error("error occurred while starting the simulation!\n"));
 	return (0);
 }
-

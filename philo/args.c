@@ -6,11 +6,12 @@
 /*   By: ekamar <ekamar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/06 18:30:00 by ekamar            #+#    #+#             */
-/*   Updated: 2025/09/06 18:30:00 by ekamar           ###   ########.fr       */
+/*   Updated: 2025/09/07 17:12:18 by ekamar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
+
 int	ft_strcmp(const char *s1, const char *s2)
 {
 	unsigned int	i;
@@ -23,11 +24,12 @@ int	ft_strcmp(const char *s1, const char *s2)
 
 int	get_running(t_simulation *s)
 {
-	int v;
+	int	v;
+
 	pthread_mutex_lock(&s->data_lock);
 	v = s->is_running;
 	pthread_mutex_unlock(&s->data_lock);
-	return v;
+	return (v);
 }
 
 void	set_running(t_simulation *s, int v)
@@ -39,7 +41,9 @@ void	set_running(t_simulation *s, int v)
 
 int	mark_dead(t_simulation *s)
 {
-	int changed = 0;
+	int	changed;
+
+	changed = 0;
 	pthread_mutex_lock(&s->data_lock);
 	if (s->is_running)
 	{
@@ -47,5 +51,5 @@ int	mark_dead(t_simulation *s)
 		changed = 1;
 	}
 	pthread_mutex_unlock(&s->data_lock);
-	return changed;
+	return (changed);
 }

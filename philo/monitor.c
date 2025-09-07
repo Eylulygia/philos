@@ -6,7 +6,7 @@
 /*   By: ekamar <ekamar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/06 18:30:00 by ekamar            #+#    #+#             */
-/*   Updated: 2025/09/06 18:30:00 by ekamar           ###   ########.fr       */
+/*   Updated: 2025/09/07 17:13:55 by ekamar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,6 @@ static void	check_death(t_simulation *s)
 		pthread_mutex_unlock(&s->data_lock);
 		if (died && mark_dead(s))
 		{
-			/* ID’yi filo objesinden al: 0/1 taban farkı olmasın */
 			log_event(s, s->philosophers[s->temp_index].id, "died");
 			break ;
 		}
@@ -55,7 +54,6 @@ static int	check_full(t_simulation *s)
 	pthread_mutex_unlock(&s->data_lock);
 	return (1);
 }
-
 
 void	monitor_simulation(t_simulation *s)
 {

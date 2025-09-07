@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   log.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ekamar <ekamar@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/09/07 17:13:03 by ekamar            #+#    #+#             */
+/*   Updated: 2025/09/07 17:14:13 by ekamar           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philosophers.h"
 
 int	ft_atoi(char *str)
@@ -23,6 +35,7 @@ int	ft_atoi(char *str)
 	}
 	return (sign * nb);
 }
+
 int	exceeds_int_max(const char *s)
 {
 	long long	val;
@@ -60,5 +73,4 @@ void	log_event(t_simulation *sim, int philo_id, const char *msg)
 		printf("%s%lld%s %s%d%s %s\n", RED, t, RESET, GREEN, philo_id + 1,
 			RESET, msg);
 	pthread_mutex_unlock(&sim->log_lock);
-	//usleep(50);
 }

@@ -6,7 +6,7 @@
 /*   By: ekamar <ekamar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/06 18:30:00 by ekamar            #+#    #+#             */
-/*   Updated: 2025/09/06 18:30:00 by ekamar           ###   ########.fr       */
+/*   Updated: 2025/09/07 17:13:19 by ekamar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ static void	destroy_forks(t_simulation *sim, int count)
 		i++;
 	}
 }
+
 void	cleanup(t_simulation *sim, int forks_inited, int flags)
 {
 	if (flags & 2)
