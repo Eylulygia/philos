@@ -14,6 +14,7 @@ int	main(int ac, char **av)
 {
     sim_t	sim;
 
+
     if (ac == 2 && (str_eq(av[1], "--help") || str_eq(av[1], "-h")))
     {
         printf("Usage: ./philo number_of_philos time_to_die time_to_eat time_to_sleep [max_meals]\n");
