@@ -1,5 +1,4 @@
 ﻿#include "philosophers.h"
-
 /* return 0 ok, 1 negative sign; sets *outp */
 static int skip_space_and_sign(const char *s, const char **outp)
 {
